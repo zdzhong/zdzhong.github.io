@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    hexo工具的使用 |  zdzhong
+    整车任务 |  zdzhong
   </title>
   
   <link rel="shortcut icon" href="/favicon.ico" />
@@ -34,7 +34,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-first" class="article article-type-post" itemscope
+  <article id="post-整车任务" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -42,7 +42,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  hexo工具的使用
+  整车任务
 </h1>
   
 
@@ -51,8 +51,8 @@
 
     
     <div class="article-meta">
-      <a href="/2019/12/11/first/" class="article-date">
-  <time datetime="2019-12-11T06:28:38.000Z" itemprop="datePublished">2019-12-11</time>
+      <a href="/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" class="article-date">
+  <time datetime="2019-12-16T02:29:26.000Z" itemprop="datePublished">2019-12-16</time>
 </a>
       
     </div>
@@ -75,19 +75,33 @@
       
 
       
-      <p>&ensp; 一直想搭建一个属于自己的博客，终于被我捣鼓出来了。现在虽然没有文章，但是时间还长，慢慢积累吧！  </p>
-<h2 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean        &#x2F;&#x2F;清除静态页面缓存（清除 public 文件夹)         </span><br><span class="line">$ hexo g            &#x2F;&#x2F;在本地生成静态页面（生成 public 文件夹）        </span><br><span class="line">$ hexo s            &#x2F;&#x2F;启动本地服务 http:&#x2F;&#x2F;localhost:4000，进行预览调试           </span><br><span class="line">$ hexo d            &#x2F;&#x2F;远程部署，同步到 GitHub</span><br></pre></td></tr></table></figure>
-<p>&ensp; hexo g 是 hexo generate的简写，由此可知hexo s -&gt; hexo server，hexo d -&gt; hexo deploy  </p>
+      <p>&ensp; 整车任务优化，巴枪端取派任务界面有一个下拉刷新功能，在取货任务下拉刷新时会去调用整车任务接口，获取该司机的整车任务，但是每个司机不一定有整车任务，<br>所以每次调用返回的都为null。  </p>
+<h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><p>&ensp; 更改获取获取整车任务的方式，通过主动调用接口，切换为当司机有整车任务的时候，通过对方发送消息给我们。通过回调我们接口，将其存入Redis，每次只需要查一遍Redis，减少接口调用，优化接口性能。  </p>
 <a id="more"></a>    
 
-<h2 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h2><p>&ensp; 在搭建好hexo后，自带的默认主题<code>landscape</code>。想要符合自己风格的主题可以在<a href="https://hexo.io/themes/" target="_blank" rel="noopener">官方主题</a>下载<br>&ensp; 下载之后将主题放在<code>themes</code>下面，然后在<code>_config.yml</code>文件中进行修改，重新部署到服务器之后生效。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Plugins: https:&#x2F;&#x2F;hexo.io&#x2F;plugins&#x2F;</span><br><span class="line">## Themes: https:&#x2F;&#x2F;hexo.io&#x2F;themes&#x2F;</span><br><span class="line">theme: ayer</span><br></pre></td></tr></table></figure>
+
+<h2 id="Redis数据结构"><a href="#Redis数据结构" class="headerlink" title="Redis数据结构"></a>Redis数据结构</h2><p>&ensp; 一个司机有多个整车任务，司机做完一个任务，可以结束当前的整车任务，需要将其移除，下次下拉刷新查询不能有这个任务。key都用司机工号，value有3种数据类型可以考虑，string，list，hash。<br>1.将司机的所有整车任务序列化为json串，作为string类型存入；<br>2.将司机的所有整车任务存入list，作为list类型存入；<br>3.将司机的所有整车任务通过hash类型存入。<br>但是有一点需要注意，如果司机完成了一个任务，需要将其删除，如果用string类型，需要将其查出，反序列化成对象，删除某个任务，再序列化成json串，再次存入。这样操作繁琐，弃用。<br>如果采用list则减少序列化与反序列的操作，也需要查出，再remove某个任务，再存入。这种类型可行，做为备用。<br>最好的方式是采用hash存储，当需要移除某个任务是，直接remove对应的hash key即可。  </p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>&ensp; 使用Spring封装的<code>HashOperations&lt;H, HK, HV&gt;</code>类，操作简单</p>
+<pre><code>RedisTemplate&lt;String, Object&gt; cacheTemplate = SpringUtils.getBean(&quot;redisTemplate&quot;, RedisTemplate.class);  
+HashOperations&lt;String, String, Object&gt; hashOperations = cacheTemplate.opsForHash   </code></pre><p>首先先获得一个RedisTemplate，再用opsForHash将其转为HashOperations类型。<br>HashOperations中的方法，主要用到的四个方法：<br>put(H key, HK hashKey, HV value)<br>get(H key, Object hashKey)<br>delete(H key, Object… hashKeys)<br>values(H key)  </p>
+<pre><code>hashOperations.put(employeeNumber, taskId, Object)   
+# cache key：工号, hash key：整车任务id, Object：具体内容。  
+
+hashOperations.values(employeeNumber)                
+# 查询该司机所有的整车任务。  
+
+hashOperations.get(employeeNumber, taskId)           
+# 查询该司机某个整车任务的任务详情。
+
+hashOperations.delete(employeeNumber, taskId)        
+# 删除该司机的某个任务。</code></pre><p>over.</p>
+
       
       <!-- 打赏 -->
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/first/" data-id="ck51xgcgc0001wkna2v1372s2"
+      <a data-url="http://yoursite.com/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" data-id="ck51xgcgr0002wknaa2ru7u0h"
         class="article-share-link">分享</a>
       
     </footer>
@@ -98,19 +112,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            整车任务
-          
-        </div>
-      </a>
     
-    
-      <a href="/2019/12/11/hello-world/" class="article-nav-link">
+      <a href="/2019/12/11/first/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Hello World</div>
+        <div class="article-nav-title">hexo工具的使用</div>
       </a>
     
   </nav>
