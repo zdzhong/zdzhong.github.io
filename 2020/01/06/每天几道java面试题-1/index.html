@@ -79,7 +79,7 @@
       
 
       
-      <p>&ensp; 所有的java面试题来源知乎的一篇<a href="https://zhuanlan.zhihu.com/p/86536581" target="_blank" rel="noopener">面试清单（Java岗）</a>，从2020年1月6号开始，以每天5道java面试题的速度进步。  </p>
+      <p>&ensp; 所有的java面试题来源知乎的一篇<a href="https://zhuanlan.zhihu.com/p/86536581" target="_blank" rel="noopener">面试清单（Java岗）</a>，从2020年1月6号开始，以每天一篇java文章进步，想到啥写啥！  </p>
 <h1 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h1><h2 id="1-Hashmap-源码及掌握"><a href="#1-Hashmap-源码及掌握" class="headerlink" title="1.Hashmap 源码及掌握"></a>1.Hashmap 源码及掌握</h2><p>&ensp; <code>Hashmap</code>涉及的知识点较多，第一道题难道想要将我要进步的心扼杀在萌芽之中？<br>诶！万事开头难，慢慢啃吧！</p>
 <a id="more"></a>
 
@@ -165,7 +165,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
             resize();
         afterNodeInsertion(evict);
         return null;
-    }</code></pre><p>哇，一个put方法就这么多（要不放弃吧！），慢慢来吧！<br>首先put方法中调用的putVal这个方法。<br>putVal方法中，先把<code>table</code>赋值给tab，<code>tab.length</code>赋值给n，如果<code>table</code>为null或者<code>tab.length</code>等于0，则进行扩容。<br>调用resize方法，扩容方法等下分析。继续，resize之后获得一个新的<code>Node</code>数组，判断i = (n - 1) &amp; hash数组索引为i处的Node是否有值，<br>如果没有值，则将键值对放在tab[i]处。<br>如果此处有值，则判断key是否存在<code>table</code>中，如果存在，则替换之前的值，如果不存在，则这个节点的拿下一个节点继续做判断。<br>其中有两点，第一点，如果当前节点的为红黑树数据结构，则新加入的节点会转为红黑树数据结构。<br>第二点，如果冲突的节点数已经达到8个，看是否需要改变冲突节点的存储结构，首先判断当前hashMap的容量，<br>如果不足64，只进行resize，扩容table，如果达到64，那么将冲突的存储结构为红黑树。</p>
+    }</code></pre><p>哇，一个put方法就这么多（要不放弃吧！），慢慢来吧！<br>首先put方法中调用的putVal这个方法。<br>putVal方法中，先把<code>table</code>赋值给tab，<code>tab.length</code>赋值给n，如果<code>table</code>为null或者<code>tab.length</code>等于0，则进行扩容。<br>调用resize方法，扩容方法等下分析。继续，resize之后获得一个新的<code>Node</code>数组，判断i = (n - 1) &amp; hash数组索引为i处的Node是否有值，<br>如果没有值，则将键值对放在tab[i]处。<br>如果此处有值，则判断key是否存在<code>table</code>中，如果存在，则替换之前的值，如果不存在，则这个节点的拿下一个节点继续做判断。<br>其中有两点，第一点，如果当前节点的为红黑树数据结构，则新加入的节点会转为红黑树数据结构。<br>第二点，如果冲突的节点数已经达到8个，看是否需要改变冲突节点的存储结构，首先判断当前hashMap的容量，<br>如果不足64，只进行resize，扩容table，如果达到64，那么将冲突的存储结构为红黑树。  </p>
 <pre><code>final Node&lt;K,V&gt;[] resize() {
         Node&lt;K,V&gt;[] oldTab = table;
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
@@ -244,7 +244,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck529oosz0002v8na9r6l42hd"
+      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck539mn7p0004kona87z3cmqe"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
@@ -256,6 +256,15 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
   
   
   <nav class="article-nav">
+    
+      <a href="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            红黑树
+          
+        </div>
+      </a>
     
     
       <a href="/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" class="article-nav-link">
