@@ -83,7 +83,7 @@
 <h1 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h1><h2 id="1-Hashmap-源码及掌握"><a href="#1-Hashmap-源码及掌握" class="headerlink" title="1.Hashmap 源码及掌握"></a>1.Hashmap 源码及掌握</h2><p>&ensp; <code>Hashmap</code>涉及的知识点较多，第一道题难道想要将我要进步的心扼杀在萌芽之中？<br>诶！万事开头难，慢慢啃吧！</p>
 <a id="more"></a>
 
-<p>&ensp; 印象中的<code>Hashmap</code>非线程安全，集合中的个数小于8时，使用的是链表数据结构，在大于8时，会转化为红黑树（好像当个数小于6个时，由红黑树转为链表）。  </p>
+<p>&ensp; 印象中的<code>Hashmap</code>非线程安全，集合中的个数小于8时，使用的是数组加链表数据结构，用链表解决hash冲突，java8之后，冲突次数在大于8时，会转化为红黑树（好像当个数小于6个时，由红黑树转为链表）。  </p>
 <p>&ensp; 其中扩容是有一个负载因子控制，默认为0.75，当<code>集合中的个数 &gt; 容量 * 负载因子</code> 时，会进行扩容，扩容之后的容量是之前的2倍。  </p>
 <p>&ensp; 哈希算法忘记了，哈希冲突好像是如果通过哈希算法得到的该节点上有元素时，放在该节点的下个节点，如果也有元素时，继续下一个。</p>
 <p>由此引出的知识点：1.什么时红黑树 2.为什么是红黑树，别的树不可以吗？ 3.为什么8的时候树化，4不可以吗？  </p>
@@ -244,7 +244,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck539mn7p0004kona87z3cmqe"
+      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck56fsqwc000240naa6aibseg"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>

@@ -75,17 +75,26 @@
       
 
       
-      <p>&ensp; 一说道数据结构就头疼，可是面试官爱问呀！没办法，来吧！<br>记忆中的红黑树，由红黑节点组成的一颗树（二叉树？），没了，什么都不记得了！</p>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>&ensp; 首先红黑树是在平衡二叉排序树的基础上进修扩展的，所以需要掌握二叉排序树。  </p>
+      <p>&ensp; 一说到数据结构就头疼，可是面试官爱问呀！没办法，来吧！<br>记忆中的红黑树，由红黑节点组成的一颗树（二叉树？），没了，什么都不记得了！</p>
+<p>&ensp; 首先红黑树是在平衡二叉排序树的基础上进修扩展的，所以需要掌握二叉排序树。  </p>
 <h3 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h3><p>&ensp; 二叉排序树是一颗二叉树，对于树的每个节点是这样定义的：<br><strong>1.若左子树不为空，则左子树的所有节点均小于根节点的值</strong><br><strong>2.若右子树部位空，则右子树的所有节点均大于根节点的值</strong><br><strong>3.左，右子树分别也是二叉排序树</strong>  </p>
-<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>&ensp; 普通的二叉排序树存在极不平衡的情况，导致整棵树的深度非常深，使得二叉排序树的时间复杂度退化成O(n)。<br>&ensp; 平衡二叉树的定义：它是一 棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。<br>&ensp; 解决这种情况的做法，在往一棵树中插入一个新的节点时，如果二叉树的左右高度超过1时，进行左旋、右旋、先右旋再左旋、先左旋再右旋。<br><img src="/.com//right.png" alt="右旋"></p>
+<a id="more"></a>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>&ensp; 普通的二叉排序树存在极不平衡的情况，导致整棵树的深度非常深，使得二叉排序树的时间复杂度退化成O(n)。<br>&ensp; 平衡二叉树的定义：它是一 棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。<br>&ensp; 解决这种情况的做法，在往一棵树中插入一个新的节点时，如果二叉树的左右高度超过1时，进行左旋、右旋、先右旋再左旋、先左旋再右旋。  </p>
+<p><strong>右旋</strong><br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/right.png" alt="右旋">  </p>
+<p><strong>左旋</strong><br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/left.png" alt="右旋">  </p>
+<p><strong>先右旋再左旋</strong><br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/right_left.png" alt="先右旋再左旋">  </p>
+<p><strong>先左旋再右旋</strong><br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/left_right.png" alt="先左旋再右旋">  </p>
+<p>这里举例是结合了二叉排序树和平衡二叉树，接下来就轮到的红黑树。  </p>
+<h3 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h3><p>&ensp; 红黑树的特性：<br><strong>1.每个节点要么是黑色，要么是红色。</strong><br><strong>2.根节点是黑色。</strong><br><strong>3.每个叶子节点（null）是黑色。</strong><br><strong>4.每个红色结点的两个子结点一定都是黑色。</strong><br><strong>5.任意一结点到每个叶子结点的路径都包含数量相同的黑结点。</strong><br>&ensp; 所有的叶子节点都为null。红黑树有这么多的特性，如果对某个红黑树进行插入或者删除，是如何达到这种平衡呢？那就是来自红黑树的自平衡，红黑树之所以很难，就是每次插入或者删除操作都会打破这种平衡。  </p>
+<p><strong>插入</strong><br>&ensp; 每次插入操作之前都需要查找，需要插入的位置。对于查找算法，如下：<br><strong>1.从根结点开始查找</strong><br><strong>2.若根结点为空，那么插入结点作为根结点，结束</strong><br><strong>3.若根结点不为空，那么把根结点作为当前结点</strong><br><strong>4.若当前结点为null，返回当前结点的父结点，结束</strong><br><strong>5.若当前结点key等于查找key，那么该key所在结点就是插入结点，更新结点的值，结束</strong><br><strong>6.若当前结点key大于查找key，把当前结点的左子结点设置为当前结点，重复步骤4</strong><br><strong>7.若当前结点key小于查找key，把当前结点的右子结点设置为当前结点，重复步骤4</strong><br>所有的叶子节点都是null节点，所以一定能找到插入位置。<br>&ensp; 假设当前的节点为节点1，有如下的约定：<br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/appointment01.png" alt><br>&ensp; 假设插入一个元素，那么有个问题，这个节点的颜色是啥？假设为黑色，那么每次插入的时候，该节点所在的路径上的黑色总会多一个，就需要进行自平衡。如果每次插入节点的颜色为红色，这样就存在插入后就已经达到了黑色平衡。所以每次插入的节点颜色为红色。<br>&ensp; 每次插入的情况有如下几种，如图：<br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/insert01.png" alt><br>&ensp; 插入操作情况存在这么多种，但是都左右对称。  </p>
+<p><strong>删除</strong><br>&ensp; 接下来轮到删除了，删除操作就是查找对应的key，将该key对应的节点进行移除，但删除节点的位子需要有人顶替，所以在替换时对于替换的节点颜色和删除节点的位置进行分析。值得注意的是，如果删除的节点无子节点，直接删除即可。如果有一个子节点，用子结点替换删除结点。若删除结点有两个子结点，用后继结点（大于删除结点的最小结点）替换删除结点，也就是删除节点的右子树种最左结点。那么可以拿前继结点（删除结点的左子树最左结点）替代吗？可以的。但习惯上大多都是拿后继结点来替代。<br>&ensp; 每次删除的情况有如下几种，如图：<br><img src="/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/delete01.png" alt> </p>
 
       
       <!-- 打赏 -->
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="ck539mn7r0005konac8198z2x"
+      <a data-url="http://yoursite.com/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="ck56fsqwa000140naf28a4bbx"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
