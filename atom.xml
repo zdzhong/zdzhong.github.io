@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-01-13T08:29:52.782Z</updated>
+  <updated>2020-01-14T08:18:30.896Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>find bugs插件问题总结</title>
+    <link href="http://yoursite.com/2020/01/14/find-bugs%E6%8F%92%E4%BB%B6%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2020/01/14/find-bugs%E6%8F%92%E4%BB%B6%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</id>
+    <published>2020-01-14T06:56:47.000Z</published>
+    <updated>2020-01-14T08:18:30.896Z</updated>
+    
+    <content type="html"><![CDATA[<p>&ensp; 总结项目中遇到的各种bug，长期更新。使用idea一定要安装一个阿里巴巴的find bugs插件，可以减少代码的bug，以及提升系统性能。  </p><p>&ensp; Findbugs是一个静态分析工具，它检查类或者JAR 文件，将字节码与一组缺陷模式进行对比以发现可能的问题。Findbugs自带检测器，其中有60余种Bad practice，80余种Correctness，1种 Internationalization，12种Malicious code vulnerability，27种Multithreaded correctness，23种Performance，43种Dodgy。  </p><p>&ensp; <code>Bad practice</code>:坏的实践，<code>Correctness</code>:可能导致错误的代码，<code>Performance</code>:性能问题，<code>Dodgy</code>:具有潜在危险的代码等等…</p><h4 id="1-Inefficient-use-of-keySet-iterator-instead-of-entrySet-iterator"><a href="#1-Inefficient-use-of-keySet-iterator-instead-of-entrySet-iterator" class="headerlink" title="1.Inefficient use of keySet iterator instead of entrySet iterator."></a>1.Inefficient use of keySet iterator instead of entrySet iterator.</h4><p>在进行的带map对象时，使用的时map.keySet()，建议使用entrySet。<br><strong>原代码</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Object&gt; map &#x3D; new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; init map</span><br><span class="line"></span><br><span class="line">for (String key : map.keySet()) &#123;</span><br><span class="line">&#x2F;&#x2F; 取出key对应的value</span><br><span class="line">Object obj &#x3D; map.get(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><strong>建议修正后代码</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Object&gt; map &#x3D; new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; init map</span><br><span class="line"></span><br><span class="line">for (Map.Entry&lt;String, Object&gt; entry : map.entrySet())&#123;</span><br><span class="line">&#x2F;&#x2F; 获取key</span><br><span class="line">String key &#x3D; entry.getKey();</span><br><span class="line">&#x2F;&#x2F; 获取对应value</span><br><span class="line">Object obj &#x3D; entry.getValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>用keySet迭代器是低效地，用entrySet迭代器会更高效，entrySet迭代器 : keySet迭代器大致是1.5 : 1。  </p><h4 id="2-Boxed-value-is-unboxed-and-then-immediately-reboxed"><a href="#2-Boxed-value-is-unboxed-and-then-immediately-reboxed" class="headerlink" title="2.Boxed value is unboxed and then immediately reboxed."></a>2.Boxed value is unboxed and then immediately reboxed.</h4><p>装箱后的值先拆箱，然后立即重新装箱。<br><strong>原代码</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User user &#x3D; new User();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; User存在一个Integer类型的age。</span><br><span class="line"></span><br><span class="line">Integer age &#x3D; user.getAge();</span><br><span class="line">&#x2F;&#x2F; 如果age为null，则将其设置为0.</span><br><span class="line">age &#x3D; age &#x3D;&#x3D; null ? 0 : age;</span><br></pre></td></tr></table></figure><p>此问题在于age不为null时，会被拆箱，赋值时再装箱。这是自动装箱拆箱的特性，只要运算中有不同类型，当涉及到类型转换时，编译器就会向下转型，再进行运算。  </p><p><strong>建议修正后代码</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">age &#x3D; age &#x3D;&#x3D; null ? Integer.valueOf(0) : age;</span><br></pre></td></tr></table></figure><h4 id="3-Null-pointer-dereference"><a href="#3-Null-pointer-dereference" class="headerlink" title="3.Null pointer dereference"></a>3.Null pointer dereference</h4><p>这里泛指空指针错误，遇到不同类型的都会在这个下面进行记录。  </p><h5 id="3-1-Unboxing-of-‘xxx’-may-produce-‘java-lang-NullPointerException’-这个问题是项目开发中遇到的！"><a href="#3-1-Unboxing-of-‘xxx’-may-produce-‘java-lang-NullPointerException’-这个问题是项目开发中遇到的！" class="headerlink" title="3.1 Unboxing of ‘xxx’ may produce ‘java.lang.NullPointerException’(这个问题是项目开发中遇到的！)"></a>3.1 Unboxing of ‘xxx’ may produce ‘java.lang.NullPointerException’(这个问题是项目开发中遇到的！)</h5><p>这个空指针当时可耗费我很多时间去找，为何这一行代码会报空指针呢？上代码：<br><strong>原代码</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">User user &#x3D; new User();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; User存在一个Integer类型的age。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if(null !&#x3D; user)&#123;</span><br><span class="line">&#x2F;&#x2F; 这一行报NPE</span><br><span class="line">int age &#x3D; user.getAge();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>当时我震惊了，这个为啥会报NPE呢？问题就出现在Integer类型在向下转型的时候报的。user.getAge()为null，在向下转型时，null不能转为基本数据类型，所以报NPE。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&amp;ensp; 总结项目中遇到的各种bug，长期更新。使用idea一定要安装一个阿里巴巴的find bugs插件，可以减少代码的bug，以及提升系统性能。  &lt;/p&gt;
+&lt;p&gt;&amp;ensp; Findbugs是一个静态分析工具，它检查类或者JAR 文件，将字节码与一组缺陷模式进行
+      
+    
+    </summary>
+    
+    
+      <category term="代码规范" scheme="http://yoursite.com/categories/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="IDEA" scheme="http://yoursite.com/tags/IDEA/"/>
+    
+  </entry>
   
   <entry>
     <title>CompletableFuture的实际应用</title>
@@ -115,7 +144,7 @@
     <link href="http://yoursite.com/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/"/>
     <id>http://yoursite.com/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/</id>
     <published>2019-12-16T02:29:26.000Z</published>
-    <updated>2020-01-06T04:10:05.246Z</updated>
+    <updated>2020-01-14T06:57:18.051Z</updated>
     
     <content type="html"><![CDATA[<p>&ensp; 整车任务优化，巴枪端取派任务界面有一个下拉刷新功能，在取货任务下拉刷新时会去调用整车任务接口，获取该司机的整车任务，但是每个司机不一定有整车任务，<br>所以每次调用返回的都为null。  </p><h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><p>&ensp; 更改获取获取整车任务的方式，通过主动调用接口，切换为当司机有整车任务的时候，通过对方发送消息给我们。通过回调我们接口，将其存入Redis，每次只需要查一遍Redis，减少接口调用，优化接口性能。  </p><a id="more"></a>    <h2 id="Redis数据结构"><a href="#Redis数据结构" class="headerlink" title="Redis数据结构"></a>Redis数据结构</h2><p>&ensp; 一个司机有多个整车任务，司机做完一个任务，可以结束当前的整车任务，需要将其移除，下次下拉刷新查询不能有这个任务。key都用司机工号，value有3种数据类型可以考虑，string，list，hash。<br>1.将司机的所有整车任务序列化为json串，作为string类型存入；<br>2.将司机的所有整车任务存入list，作为list类型存入；<br>3.将司机的所有整车任务通过hash类型存入。<br>但是有一点需要注意，如果司机完成了一个任务，需要将其删除，如果用string类型，需要将其查出，反序列化成对象，删除某个任务，再序列化成json串，再次存入。这样操作繁琐，弃用。<br>如果采用list则减少序列化与反序列的操作，也需要查出，再remove某个任务，再存入。这种类型可行，做为备用。<br>最好的方式是采用hash存储，当需要移除某个任务是，直接remove对应的hash key即可。  </p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>&ensp; 使用Spring封装的<code>HashOperations&lt;H, HK, HV&gt;</code>类，操作简单</p><pre><code>RedisTemplate&lt;String, Object&gt; cacheTemplate = SpringUtils.getBean(&quot;redisTemplate&quot;, RedisTemplate.class);  HashOperations&lt;String, String, Object&gt; hashOperations = cacheTemplate.opsForHash   </code></pre><p>首先先获得一个RedisTemplate，再用opsForHash将其转为HashOperations类型。<br>HashOperations中的方法，主要用到的四个方法：<br>put(H key, HK hashKey, HV value)<br>get(H key, Object hashKey)<br>delete(H key, Object… hashKeys)<br>values(H key)  </p><pre><code>hashOperations.put(employeeNumber, taskId, Object)   # cache key：工号, hash key：整车任务id, Object：具体内容。  hashOperations.values(employeeNumber)                # 查询该司机所有的整车任务。  hashOperations.get(employeeNumber, taskId)           # 查询该司机某个整车任务的任务详情。hashOperations.delete(employeeNumber, taskId)        # 删除该司机的某个任务。</code></pre><p>over.</p>]]></content>
     
@@ -126,6 +155,8 @@
     
     </summary>
     
+    
+      <category term="项目经验" scheme="http://yoursite.com/categories/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/"/>
     
     
   </entry>
