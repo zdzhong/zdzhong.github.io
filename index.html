@@ -60,6 +60,145 @@
 
     
     
+    <article id="post-Spring-Cloud-从入门到放弃-一" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/"
+    >Spring Cloud 从入门到放弃(一)</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/" class="article-date">
+  <time datetime="2020-02-29T07:29:28.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring-Cloud/">Spring Cloud</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>&ensp; Spring Cloud是一系列框架的有序集合。它利用Spring Boot的开发便利性巧妙地简化了分布式系统基础设施的开发，如服务发现注册、配置中心、消息总线、负载均衡、断路器、数据监控等，都可以用Spring Boot的开发风格做到一键启动和部署。Spring Cloud并没有重复制造轮子，它只是将各家公司开发的比较成熟、经得起实际考验的服务框架组合起来，通过Spring Boot风格进行再封装屏蔽掉了复杂的配置和实现原理，最终给开发者留出了一套简单易懂、易部署和易维护的分布式系统开发工具包。 ——来源<a href="https://baike.baidu.com/item/spring%20cloud/20269825?fr=aladdin" target="_blank" rel="noopener">百度百科</a>  </p>
+      
+      <a class="article-more-link" href="/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/" data-id="ck7befh780006s8nagzp23fpy"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-Redis从入门到放弃-1" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/27/Redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1/"
+    >Redis从入门到放弃(1)</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/27/Redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1/" class="article-date">
+  <time datetime="2020-02-27T03:08:11.000Z" itemprop="datePublished">2020-02-27</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>&ensp; Redis（全称：Remote Dictionary Server 远程字典服务）是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。从2010年3月15日起，Redis的开发工作由VMware主持。从2013年5月开始，Redis的开发由Pivotal赞助。——来源<a href="https://baike.baidu.com/item/Redis/6549233?fr=aladdin" target="_blank" rel="noopener">百度百科</a></p>
+<h2 id="1-Redis-简单介绍"><a href="#1-Redis-简单介绍" class="headerlink" title="1.Redis 简单介绍"></a>1.Redis 简单介绍</h2><p>&ensp; Redis是一个开源的，基于内存的数据结构存储，可用作于<strong>数据库、缓存、消息中间件</strong>，以及和token结合实现接口幂等性校验。<br>&ensp; Redis是基于内存，常用作于缓存的一种技术，并且Redis存储的方式是以key-value的形式。这和Java中的Map集合非常相似，但是这两者之间有什么不同呢？  </p>
+<pre><code>Java实现的Map是本地缓存，如果有多台实例(机器)的话，每个实例都需要各自保存一份缓存，缓存不具有一致性。
+Redis实现的是分布式缓存，如果有多台实例(机器)的话，每个实例都共享一份缓存，缓存具有一致性。
+Java实现的Map不是专业做缓存的，JVM内存太大容易挂掉的。一般用做于容器来存储临时数据，缓存的数据随着JVM销毁而结束。Map所存储的数据结构，缓存过期机制等等是需要程序员自己手写的。
+Redis是专业做缓存的，可以用几十个G内存来做缓存。Redis一般用作于缓存，可以将缓存数据保存在硬盘中，Redis重启了后可以将其恢复。原生提供丰富的数据结构、缓存过期机制等等简单好用的功能。</code></pre><h2 id="2-Redis-数据结构"><a href="#2-Redis-数据结构" class="headerlink" title="2.Redis 数据结构"></a>2.Redis 数据结构</h2><p>&ensp; Redis以Key-Value形式存储，那么key对应的数据结构是字符串类型存储，但是value的数据结构就比较多，分别有：string、list、hash、set、sortset。 </p>
+<p>&ensp; Redis由C语言编写，值得注意的是：Redis并没有直接使用C语言的这些数据结构来实现key-value数据库，而是基于这些数据结构创建了一个对象（结构体）系统。简单来说：Redis使用对象来表示数据库中的键和值。每次我们在Redis数据库中新创建一个键值对时，至少会创建出两个对象。一个是键对象，一个是值对象。   </p>
+<p>&ensp; Redis中的key使用的字符串类型跟C语言中的字符串不同，使用的是简单动态字符串（Simple dynamic string,SDS）</p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/27/Redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1/" data-id="ck7befh720002s8na0fyhcygm"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/" rel="tag">redis</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-find-bugs插件问题总结" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -109,7 +248,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/14/find-bugs%E6%8F%92%E4%BB%B6%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" data-id="ck5dm3fsb0006fsna6no7gg1q"
+      <a data-url="http://yoursite.com/2020/01/14/find-bugs%E6%8F%92%E4%BB%B6%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" data-id="ck7befh7b0008s8na9wcxhfct"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IDEA/" rel="tag">IDEA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
@@ -176,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/13/CompletableFuture%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/" data-id="ck5dm3frr0000fsna6kybc4ek"
+      <a data-url="http://yoursite.com/2020/01/13/CompletableFuture%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/" data-id="ck7befh6t0000s8naajdv8oc0"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li></ul>
@@ -244,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/10/TCP%E8%AF%A6%E8%A7%A3/" data-id="ck5dm3fs20002fsna1k56dmbp"
+      <a data-url="http://yoursite.com/2020/01/10/TCP%E8%AF%A6%E8%A7%A3/" data-id="ck7befh7a0007s8na9lob2dxz"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li></ul>
@@ -309,7 +448,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="ck5dm3fsj000dfsnaguij9ar2"
+      <a data-url="http://yoursite.com/2020/01/07/%E7%BA%A2%E9%BB%91%E6%A0%91/" data-id="ck7befh7l000js8nae9qq30tz"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
@@ -377,7 +516,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck5dm3fsi000cfsnaewtrg87z"
+      <a data-url="http://yoursite.com/2020/01/06/%E6%AF%8F%E5%A4%A9%E5%87%A0%E9%81%93java%E9%9D%A2%E8%AF%95%E9%A2%98-1/" data-id="ck7befh7i000hs8na49y2bqdd"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
@@ -445,7 +584,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" data-id="ck5dm3fsf0008fsnabj2bgyk5"
+      <a data-url="http://yoursite.com/2019/12/16/%E6%95%B4%E8%BD%A6%E4%BB%BB%E5%8A%A1/" data-id="ck7befh7f000ds8na0n0u2wmz"
         class="article-share-link">分享</a>
       
     </footer>
@@ -508,7 +647,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/11/first/" data-id="ck5dm3fse0007fsnagwen1nyl"
+      <a data-url="http://yoursite.com/2019/12/11/first/" data-id="ck7befh7e000cs8nabv6d8w3j"
         class="article-share-link">分享</a>
       
     </footer>

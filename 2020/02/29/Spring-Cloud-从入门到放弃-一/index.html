@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="一个心中空有一万个理想，却只有三分钟的热度" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Spring Cloud 从入门到放弃(一) |  zdzhong
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.1.0"><link rel="alternate" href="/atom.xml" title="zdzhong" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-Spring-Cloud-从入门到放弃-一" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Spring Cloud 从入门到放弃(一)
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/" class="article-date">
+  <time datetime="2020-02-29T07:29:28.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring-Cloud/">Spring Cloud</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>&ensp; Spring Cloud是一系列框架的有序集合。它利用Spring Boot的开发便利性巧妙地简化了分布式系统基础设施的开发，如服务发现注册、配置中心、消息总线、负载均衡、断路器、数据监控等，都可以用Spring Boot的开发风格做到一键启动和部署。Spring Cloud并没有重复制造轮子，它只是将各家公司开发的比较成熟、经得起实际考验的服务框架组合起来，通过Spring Boot风格进行再封装屏蔽掉了复杂的配置和实现原理，最终给开发者留出了一套简单易懂、易部署和易维护的分布式系统开发工具包。 ——来源<a href="https://baike.baidu.com/item/spring%20cloud/20269825?fr=aladdin" target="_blank" rel="noopener">百度百科</a>  </p>
+<a id="more"></a>  
+<h3 id="Spring-Cloud简介"><a href="#Spring-Cloud简介" class="headerlink" title="Spring Cloud简介"></a>Spring Cloud简介</h3><p>&ensp; 为什么使用SpringCloud？从微服务的角度而言：就是把一个大的项目，分解成多个小的模块。这些小的模块组合起来，完成功能。而微服务在这个基础上要更彻底地去耦合。</p>
+<p>&ensp; Spring Cloud主要集成的框架：  </p>
+<p>1.Spring Cloud Eureka（服务治理）  </p>
+<p>2.Spring Cloud Ribbon（客户端负载均衡）  </p>
+<p>3.Spring Cloud Hystrix（服务容错保护）  </p>
+<p>4.Spring Cloud Feign（声明式服务调用）  </p>
+<p>5.Spring Cloud Zuul（API网关服务）  </p>
+<p>6.Spring Cloud Config（分布式配置中心）  </p>
+<p>7.Spring Cloud Bus（消息总线）  </p>
+<p>8.Spring Cloud Stream（消息驱动的微服务）  </p>
+<p>9.Spring Cloud Sleuth（分布式服务跟踪）  </p>
+<h3 id="Spring-Cloud-Eureka-服务治理"><a href="#Spring-Cloud-Eureka-服务治理" class="headerlink" title="Spring Cloud Eureka 服务治理"></a>Spring Cloud Eureka 服务治理</h3><p>&ensp; 如果在未使用微服务的系统，在调用其他服务下面的接口时，只有通过ip地址+端口号+接口名的形式去显示调用需要用的接口。这样会导致在ip更换的情况下，需要修改各服务的ip，而现实中ip也存在变更的情况。那么Eureka的作用就体现出来了，不需要去通过这种显示调用其他服务的接口，只需要创建一个新的微服务作为<code>Eureka server</code>，其他服务注册到改<code>Eureka Server</code>服务上，然后其他微服务通过<code>Eureka Server</code>获取服务名就可以调用，而一般服务名不会去修改。  </p>
+<p>&ensp; 假设现在又两个微服务分别为：微服务A、微服务B，A需要调用B获取数据，那如何才能通过微服务调用呢？需要创建一个Eureka Server服务器E，将所有的微服务都注册在E上，E服务维护这些已经注册进来的信息，然后E会生成一个注册清单。其他微服务都可以获取这个注册清单。  </p>
+<p>&ensp; 所以Eureka分为两个部分，一个是收集所有的注册信息的一端称为<code>Eureka server</code>端，而发送自己的信息给到<code>Eureka server</code>端的或者，获取注册清单的，这两部分称之为<code>Eureka client端</code>。而<code>Eureka client</code>分为两个方面，一个方面叫做<strong>服务提供者</strong>，还有一个叫做<strong>服务消费者</strong>。所谓的服务提供者就是将本身的服务名以及一些元数据发送给<code>Eureka server</code>端，这就叫服务提供者，而从<code>Eureka server</code>端获取注册清单的称为服务消费者。一个微服务可以作为服务提供者也可以作为服务消费者，可以同时担任两种角色，这两种角色并不互斥。  </p>
+<p><img src="/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/Eureka01.png" alt="Eureka01">  </p>
+<p>&ensp; 由上图可知，微服务A和微服务B将其自己的相关信息注册到<code>Eureka server</code>服务上面，也可以获取<code>Eureka server</code>上获取注册清单，所以微服务A和微服务B即作为服务提供者，也作为服务消费者，而微服务C和微服务D只从<code>Eureka server</code>上面获取了注册清单，所以微服务C和微服务D只作为服务消费者。  </p>
+<h4 id="Eureka的治理机制"><a href="#Eureka的治理机制" class="headerlink" title="Eureka的治理机制"></a>Eureka的治理机制</h4><p>&ensp; 可以通过对角色进行划分Eureka的治理机制：服务提供者、服务消费者、Eureka server（服务注册中心），可以通过角色定位分析Eureka的治理机制。  </p>
+<p>&ensp; <strong>服务提供者</strong>  </p>
+<p>&emsp; <font color="red">服务注册</font> ：在服务启动的时候会通过发送REST请求的方式将自己注册到Eureka Server上，同时带上了自己的IP和端口以及相关信息；  </p>
+<p>&emsp; <font color="red">服务续约</font> ：在注册服务成功之后，服务提供者会维护一个心跳用来持续告诉Eureka Server，默认是30秒一次请求；  </p>
+<p>&emsp; <font color="red">服务下线</font> ：当服务提供者关闭时会向Eureka server发送消息，把自己从服务列表中删除。防止服务消费者调用到不存在的服务。</p>
+<p>&ensp; <strong>服务消费者</strong>  </p>
+<p>&emsp; <font color="red">获取服务注册列表</font> ：当服务消费者启动时，会发送一个REST请求给服务注册中心，来获取上面注册的服务清单；</p>
+<p>&emsp; <font color="red">服务调用</font> ：服务消费者在获取服务清单后，通过服务名可以获得具体提供服务相关接口，完成服务的远程调用；</p>
+<p>&ensp; <strong>Eureka server（服务注册中心）</strong>  </p>
+<p>&emsp; <font color="red">失效剔除</font> ：默认每隔一段时间（默认为60秒） 将当前清单中超时（默认为90秒）没有续约的服务剔除出去；</p>
+<p>&emsp; <font color="red">服务调用</font> ：Eureka server在运行期间，会统计心跳失败的比例在15分钟之内是否低于85%。 Eureka server会将当前的实例注册信息保护起来，让这些实例不会过期，尽可能保护这些注册信息。</p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/29/Spring-Cloud-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E4%B8%80/" data-id="ck7befh780006s8nagzp23fpy"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/02/27/Redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Redis从入门到放弃(1)</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        notify: false,
+        verify: false,
+        app_id: 'chaSYi8FMdJBwzIBpxeNjqWC-gzGzoHsz',
+        app_key: 'PqqkLYgPkHvH1BmyQqySWnSK',
+        path: window.location.pathname,
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2015-2020
+        zdzhong
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="zdzhong"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">目录</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="http://shenyu-vip.lofter.com" target="_blank" rel="noopener">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
